@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace usvfstest
 {
-    internal class usvfsWrapM
+    public class usvfsWrapM
     {
+        [DllImport("usvfsWrap.dll")] public static extern void usvfsWrapVirtualLinkDirectoryStatic(string source, string destination, uint flags);
+        [DllImport("usvfsWrap.dll")] public static extern bool usvfsWrapCreateProcessHooked(string lpApplicationName, string lpCommandLine);
+
     }
 }

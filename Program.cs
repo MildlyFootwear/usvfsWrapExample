@@ -32,12 +32,10 @@ namespace usvfstest
             string source = "J:\\BG3Profiles";
             string destination = "C:\\Tools";
 
-            [DllImport("usvfsWrap.dll")] static extern void usvfsWrapVirtualLinkDirectoryStatic(string source, string destination, uint flags);
             usvfsWrapVirtualLinkDirectoryStatic(source, destination, LINKFLAG_RECURSIVE);
             usvfsWrapVirtualLinkDirectoryStatic(destination, source, LINKFLAG_MONITORCHANGES);
             usvfsWrapVirtualLinkDirectoryStatic(source, destination, LINKFLAG_CREATETARGET);
 
-            [DllImport("usvfsWrap.dll")] static extern bool usvfsWrapCreateProcessHooked(string lpApplicationName, string lpCommandLine);
             usvfsWrapCreateProcessHooked("C:\\Tools\\Notepad++\\notepad++.exe", "");
 
             Application.Run(new Form1());
