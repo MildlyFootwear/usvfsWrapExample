@@ -11,10 +11,13 @@
 
   <ItemGroup>
     <Using Include="System.Runtime.InteropServices;" />
-    <Using Include="usvfstest.usvfsm">
+    <Using Include="usvfstest.usvfsM">
       <Static>True</Static>
     </Using>
-    <Using Include="usvfstest.usvfsp">
+    <Using Include="usvfstest.usvfsP">
+      <Static>True</Static>
+    </Using>
+    <Using Include="usvfstest.usvfsWrapM">
       <Static>True</Static>
     </Using>
   </ItemGroup>

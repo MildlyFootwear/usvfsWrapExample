@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace usvfstest
 {
-    public class usvfsp
+    public class usvfsP
     {
 
         public enum LogLevel : uint

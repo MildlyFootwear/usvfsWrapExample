@@ -7,7 +7,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace usvfstest
 {
-    public class usvfsm
+    public class usvfsM
     {
         static public uint LINKFLAG_FAILIFEXISTS = 0x00000001; // if set, linking fails in case of an error
         static public uint LINKFLAG_MONITORCHANGES = 0x00000002; // if set, changes to the source directory after the link operation
