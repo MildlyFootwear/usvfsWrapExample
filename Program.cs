@@ -32,6 +32,8 @@ namespace usvfstest
             string source = "J:\\BG3Profiles";
             string destination = "C:\\Tools";
 
+            usvfsWrapSetDebug(true);
+
             usvfsWrapVirtualLinkDirectoryStatic(source, destination, LINKFLAG_RECURSIVE);
             usvfsWrapVirtualLinkDirectoryStatic(destination, source, LINKFLAG_MONITORCHANGES);
             usvfsWrapVirtualLinkDirectoryStatic(source, destination, LINKFLAG_CREATETARGET);
@@ -45,13 +47,20 @@ namespace usvfstest
             }
             Thread exeThread = new Thread(new ThreadStart(threadMethod));
             exeThread.Start();
+            Thread.Sleep(200);
             while (running) {
                 Console.WriteLine("Main process still running. Hooked processes: "+usvfsWrapGetHookedCount());
-                Thread.Sleep(3000);
+                Thread.Sleep(5000);
             }
             Console.WriteLine("Main process terminated.");
             int hookCnt = usvfsWrapGetHookedCount();
-            while (hookCnt > 0)
+            while (hookCnt > 0) 
+            {
+                hookCnt = usvfsWrapGetHookedCount();
+                Console.WriteLine(hookCnt+" processes still hooked.");
+                Thread.Sleep(5000);
+            }
+            Console.WriteLine("No more hooked processes, shutting down VFS.");
             usvfsDisconnectVFS();
             //Application.Run(new Form1());
         }

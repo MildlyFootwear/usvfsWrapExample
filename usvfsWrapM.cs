@@ -13,6 +13,9 @@ namespace usvfstest
         [DllImport("usvfsWrap.dll")] public static extern void usvfsWrapVirtualLinkFile(string source, string destination, uint flags);
         [DllImport("usvfsWrap.dll")] public static extern void usvfsWrapCreateVFSDump();
         [DllImport("usvfsWrap.dll")] public static extern int usvfsWrapGetHookedCount();
+        [DllImport("usvfsWrap.dll")] public static extern void usvfsWrapAddSkipFileSuffix(string source, string destination);
+        [DllImport("usvfsWrap.dll")] public static extern void usvfsWrapAddSkipDirectory(string source, string destination);
+        [DllImport("usvfsWrap.dll")] public static extern void usvfsWrapSetDebug(bool b);
 
     }
 }
