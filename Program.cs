@@ -46,9 +46,12 @@ namespace usvfstest
             Thread exeThread = new Thread(new ThreadStart(threadMethod));
             exeThread.Start();
             while (running) {
-                Console.WriteLine("Main process still running.");
+                Console.WriteLine("Main process still running. Hooked processes: "+usvfsWrapGetHookedCount());
                 Thread.Sleep(3000);
             }
+            Console.WriteLine("Main process terminated.");
+            int hookCnt = usvfsWrapGetHookedCount();
+            while (hookCnt > 0)
             usvfsDisconnectVFS();
             //Application.Run(new Form1());
         }
