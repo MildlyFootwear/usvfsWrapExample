@@ -19,7 +19,7 @@ namespace usvfstest
             AllocConsole();
 
             var parameters = usvfsCreateParameters();
-            usvfsSetInstanceName(parameters, "lol");
+            usvfsSetInstanceName(parameters, "lol6");
             usvfsSetDebugMode(parameters, false);
             usvfsSetLogLevel(parameters, LogLevel.Warning);
             usvfsSetCrashDumpType(parameters, CrashDumpsType.None);
@@ -35,10 +35,22 @@ namespace usvfstest
             usvfsWrapVirtualLinkDirectoryStatic(source, destination, LINKFLAG_RECURSIVE);
             usvfsWrapVirtualLinkDirectoryStatic(destination, source, LINKFLAG_MONITORCHANGES);
             usvfsWrapVirtualLinkDirectoryStatic(source, destination, LINKFLAG_CREATETARGET);
-
-            usvfsWrapCreateProcessHooked("C:\\Tools\\Notepad++\\notepad++.exe", "");
-
-            Application.Run(new Form1());
+            usvfsWrapCreateVFSDump();
+            bool running = true;
+            void threadMethod()
+            {
+                running = true;
+                usvfsWrapCreateProcessHooked("C:\\Tools\\Notepad++\\notepad++.exe", "");
+                running = false;
+            }
+            Thread exeThread = new Thread(new ThreadStart(threadMethod));
+            exeThread.Start();
+            while (running) {
+                Console.WriteLine("Main process still running.");
+                Thread.Sleep(3000);
+            }
+            usvfsDisconnectVFS();
+            //Application.Run(new Form1());
         }
     }
 }

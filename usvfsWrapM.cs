@@ -8,8 +8,10 @@ namespace usvfstest
 {
     public class usvfsWrapM
     {
-        [DllImport("usvfsWrap.dll")] public static extern void usvfsWrapVirtualLinkDirectoryStatic(string source, string destination, uint flags);
         [DllImport("usvfsWrap.dll")] public static extern bool usvfsWrapCreateProcessHooked(string lpApplicationName, string lpCommandLine);
+        [DllImport("usvfsWrap.dll")] public static extern void usvfsWrapVirtualLinkDirectoryStatic(string source, string destination, uint flags);
+        [DllImport("usvfsWrap.dll")] public static extern void usvfsWrapVirtualLinkFile(string source, string destination, uint flags);
+        [DllImport("usvfsWrap.dll")] public static extern void usvfsWrapCreateVFSDump();
 
     }
 }
