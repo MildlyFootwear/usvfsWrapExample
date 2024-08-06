@@ -58,14 +58,7 @@ namespace usvfstest
             }
             Console.WriteLine("Main process terminated.");
             int hookCnt = usvfsWrapGetHookedCount();
-            while (hookCnt > 0) 
-            {
-                hookCnt = usvfsWrapGetHookedCount();
-                Console.WriteLine(hookCnt+" processes still hooked.");
-                Thread.Sleep(5000);
-            }
-
-            Console.WriteLine("No more hooked processes, shutting down VFS.");
+            while (hookCnt > 0)
             usvfsDisconnectVFS();
             //Application.Run(new Form1());
         }
