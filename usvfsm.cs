@@ -83,33 +83,6 @@ namespace usvfstest
         [DllImport("usvfs_x64.dll")] public static unsafe extern bool  usvfsGetVFSProcessList2(uint* count, byte** buffer);
 
         /**
-         * spawn a new process that can see the virtual file system. The signature is identical to CreateProcess
-         */
-        [DllImport("usvfs_x64.dll")] public static unsafe extern bool  usvfsCreateProcessHooked(
-            [MarshalAs(UnmanagedType.LPWStr)] string lpApplicationName, [MarshalAs(UnmanagedType.LPWStr)] string lpCommandLine,
-            IntPtr lpProcessAttributes,
-            IntPtr lpThreadAttributes, bool bInheritHandles,
-            byte dwCreationFlags, void* lpEnvironment, [MarshalAs(UnmanagedType.LPWStr)] string lpCurrentDirectory,
-            void* lpStartupInfo, void* lpProcessInformation);
-
-        /**
-         * retrieve a single log message.
-         * FIXME There is currently no way to unblock from the caller side
-         * FIXME retrieves log messages from all instances, the logging queue is not separated
-         */
-        [DllImport("usvfs_x64.dll")] public static unsafe extern bool  usvfsGetLogMessages([MarshalAs(UnmanagedType.LPStr)] string  buffer, uint size, bool blocking = false);
-
-        /**
-         * retrieves a readable representation of the vfs tree
-         * @param buffer the buffer to write to. this may be null if you only want to determine the required
-         *               buffer size
-         * @param size   pointer to a variable that contains the buffer. After the call
-         *               this value will have been updated to contain the required size,
-         *               even if this is bigger than the buffer size
-         */
-        [DllImport("usvfs_x64.dll")] public static unsafe extern bool  usvfsCreateVFSDump([MarshalAs(UnmanagedType.LPStr)] string  buffer, uint* size);
-
-        /**
          * adds an executable to the blacklist so it doesn't get exposed to the virtual
          * file system
          * @param executableName  name of the executable
@@ -127,12 +100,12 @@ namespace usvfstest
          * not to be confused with file extensions
          * @param fileSuffix  a valid file suffix
          */
-        [DllImport("usvfs_x64.dll")] public static unsafe extern void  usvfsAddSkipFileSuffix([MarshalAs(UnmanagedType.LPWStr)] string fileSuffix);
+        [DllImport("usvfs_x64.dll")] public static extern void  usvfsAddSkipFileSuffix([MarshalAs(UnmanagedType.LPWStr)] string fileSuffix);
 
         /**
          * clears the file suffix skip-list
          */
-        [DllImport("usvfs_x64.dll")] public static unsafe extern void  usvfsClearSkipFileSuffixes();
+        [DllImport("usvfs_x64.dll")] public static extern void  usvfsClearSkipFileSuffixes();
 
         /**
          * adds a directory name that will be skipped during directory linking.
@@ -142,12 +115,12 @@ namespace usvfstest
          * will have the .git directory skipped during directory linking
          * @param directory  name of the directory
          */
-        [DllImport("usvfs_x64.dll")] public static unsafe extern void  usvfsAddSkipDirectory([MarshalAs(UnmanagedType.LPWStr)] string directory);
+        [DllImport("usvfs_x64.dll")] public static extern void  usvfsAddSkipDirectory([MarshalAs(UnmanagedType.LPWStr)] string directory);
 
         /**
          * clears the directory skip-list
          */
-        [DllImport("usvfs_x64.dll")] public static unsafe extern void  usvfsClearSkipDirectories();
+        [DllImport("usvfs_x64.dll")] public static extern void  usvfsClearSkipDirectories();
 
         /**
          * adds a library to be force loaded when the given process is injected
@@ -158,16 +131,16 @@ namespace usvfstest
         /**
          * clears all previous calls to ForceLoadLibrary
          */
-        [DllImport("usvfs_x64.dll")] public static unsafe extern void  usvfsClearLibraryForceLoads();
+        [DllImport("usvfs_x64.dll")] public static extern void  usvfsClearLibraryForceLoads();
 
         /**
          * print debugging info about the vfs. The format is currently not fixed and may
          * change between usvfs versions
          */
-        [DllImport("usvfs_x64.dll")] public static unsafe extern void  usvfsPrintDebugInfo();
+        [DllImport("usvfs_x64.dll")] public static extern void  usvfsPrintDebugInfo();
 
         //#if defined(UNITTEST) || defined(_WINDLL)
-        [DllImport("usvfs_x64.dll")] public static unsafe extern void  usvfsInitLogging(bool toLocal = false);
+        [DllImport("usvfs_x64.dll")] public static extern void  usvfsInitLogging(bool toLocal = false);
         //#endif
 
 
