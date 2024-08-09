@@ -36,11 +36,18 @@ namespace usvfstest
             string source = "J:\\BG3Profiles";
             string destination = "C:\\Tools";
 
-            usvfsWrapVirtualLinkDirectoryStatic(source, destination, LINKFLAG_RECURSIVE); // LINKFLAG_RECURSIVE for linking the source and all its subdirectory.
-            usvfsWrapVirtualLinkDirectoryStatic(source, destination, LINKFLAG_CREATETARGET); // LINKFLAG_CREATETARGET will make the source directory the target for all file creation/modification operations that happen in destination.
-            usvfsWrapVirtualLinkDirectoryStatic(destination, source, LINKFLAG_MONITORCHANGES); // LINKFLAG_MONITORCHANGES will update the VFS when files are created/etc.
+            // LINKFLAG_RECURSIVE for linking the source and all its subdirectories.
+            usvfsWrapVirtualLinkDirectoryStatic(source, destination, LINKFLAG_RECURSIVE);
 
+            // LINKFLAG_CREATETARGET will make the source directory the target for all file creation/modification operations that happen in destination.
+            usvfsWrapVirtualLinkDirectoryStatic(source, destination, LINKFLAG_CREATETARGET);
+
+            // LINKFLAG_MONITORCHANGES will update the VFS when files are created/etc.
+            usvfsWrapVirtualLinkDirectoryStatic(destination, source, LINKFLAG_MONITORCHANGES);
+
+            // Convert the character array pointer provided by usvfsWrapCreateVFSDump to a proper string format for C#.
             string s = Marshal.PtrToStringAnsi(usvfsWrapCreateVFSDump());
+
             Console.WriteLine(s);
 
             // Setting up a thread to launch and hook the executable so it doesn't hang the main application.
@@ -56,7 +63,7 @@ namespace usvfstest
             Thread exeThread = new Thread(new ThreadStart(threadMethod));
             exeThread.Start();
 
-            // while loop to keep the application from proceeding past this point while the hooked executable is running
+            // while loop to keep the application from proceeding past this point while the hooked executable is running.
 
             while (running) {
                 Console.WriteLine("Main process still running. Hooked processes: "+usvfsWrapGetHookedCount()+". "+usvfsWrapGetLastHookedID());
