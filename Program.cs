@@ -31,7 +31,7 @@ namespace usvfstest
             usvfsInitLogging(false);
             usvfsCreateVFS(parameters);
 
-            usvfsWrapSetDebug(true); // Enables console printout for the usvfsWrapper.
+            usvfsWrapSetDebug(true); // Enables console printout for usvfsWrapper.
 
             string source = "J:\\BG3Profiles";
             string destination = "C:\\Tools";
