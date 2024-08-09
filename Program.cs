@@ -53,7 +53,7 @@ namespace usvfstest
 
             Thread.Sleep(200);
             while (running) {
-                Console.WriteLine("Main process still running. Hooked processes: "+usvfsWrapGetHookedCount());
+                Console.WriteLine("Main process still running. Hooked processes: "+usvfsWrapGetHookedCount()+". "+usvfsWrapGetLastHookedID());
                 Thread.Sleep(5000);
             }
             Console.WriteLine("Main process terminated.");
@@ -64,7 +64,9 @@ namespace usvfstest
                 Console.WriteLine("Main process has ended. Hooked processes: ");
                 Thread.Sleep(5000);
             }
+            Console.WriteLine("Disconnecting VFS");
             usvfsDisconnectVFS();
+            usvfsFreeParameters(parameters);
             //Application.Run(new Form1());
         }
     }
