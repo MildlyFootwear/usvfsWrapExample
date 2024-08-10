@@ -14,6 +14,8 @@ namespace usvfstest
 
         [DllImport("usvfsWrap.dll")] public static extern bool usvfsWrapCreateProcessHooked(string lpApplicationName, string lpCommandLine);
 
+        // gets the process ID of the last process launched by usvfsWrapCreateProcessHooked
+
         [DllImport("usvfsWrap.dll")] public static extern int usvfsWrapGetLastHookedID();
 
         // Functions exactly like usvfsVirtualLinkDirectoryStatic, except plain string arguments can be passed to it.
