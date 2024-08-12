@@ -27,8 +27,8 @@ namespace usvfstest
 
 
         /**
- * removes all virtual mappings
- */
+         * removes all virtual mappings
+         */
         [DllImport("usvfs_x64.dll")] public static unsafe extern void  usvfsClearVirtualMappings();
 
         /**
@@ -60,27 +60,6 @@ namespace usvfstest
          * disconnect from a virtual filesystem. This removes hooks if necessary
          */
         [DllImport("usvfs_x64.dll")] public static unsafe extern void  usvfsDisconnectVFS();
-
-        [DllImport("usvfs_x64.dll")] public static unsafe extern void  usvfsGetCurrentVFSName(char* buffer, uint size);
-
-        /**
-         * retrieve a list of all processes connected to the vfs
-         */
-        [DllImport("usvfs_x64.dll")] public static unsafe extern bool  usvfsGetVFSProcessList(uint* count, byte[] processIDs);
-
-        // retrieve a list of all processes connected to the vfs, stores an array
-        // of `count` elements in `*buffer`
-        //
-        // if this returns TRUE and `count` is not 0, the caller must release the buffer
-        // with `free(*buffer)`
-        //
-        // return values:
-        //   - ERROR_INVALID_PARAMETERS:  either `count` or `buffer` is NULL
-        //   - ERROR_TOO_MANY_OPEN_FILES: there seems to be way too many usvfs processes
-        //                                running, probably some internal error
-        //   - ERROR_NOT_ENOUGH_MEMORY:   malloc() failed
-        //
-        [DllImport("usvfs_x64.dll")] public static unsafe extern bool  usvfsGetVFSProcessList2(uint* count, byte** buffer);
 
         /**
          * adds an executable to the blacklist so it doesn't get exposed to the virtual
