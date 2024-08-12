@@ -83,6 +83,7 @@ namespace usvfsWrapExample
             // finally disconnceting and freeing the VFS
             Console.WriteLine("Disconnecting VFS");
             usvfsWrapFree();
+
             Thread.Sleep(5000);
         }
     }
