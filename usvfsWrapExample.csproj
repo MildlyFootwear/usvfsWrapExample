@@ -10,6 +10,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Legacy\usvfsm.cs" />
+    <Compile Remove="Legacy\usvfsp.cs" />
     <Compile Remove="usvfsm.cs" />
     <Compile Remove="usvfsp.cs" />
   </ItemGroup>
@@ -23,6 +25,11 @@
 
   <ItemGroup>
     <Folder Include="Reference\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Legacy\usvfsm.cs" />
+    <None Include="Legacy\usvfsp.cs" />
   </ItemGroup>
 
   <ItemGroup>
