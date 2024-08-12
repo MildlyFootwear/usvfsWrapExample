@@ -20,7 +20,7 @@ namespace usvfstest
 
             // Set up parameters for VFS.
 
-            var parameters = usvfsCreateParameters();
+            usvfsParameters* parameters = usvfsCreateParameters();
             usvfsSetInstanceName(parameters, "test");
             usvfsSetDebugMode(parameters, false);
             usvfsSetLogLevel(parameters, LogLevel.Warning);
@@ -86,7 +86,7 @@ namespace usvfstest
             Console.WriteLine("Disconnecting VFS");
             usvfsDisconnectVFS();
             usvfsFreeParameters(parameters);
-
+            Thread.Sleep(5000);
             //Application.Run(new Form1());
         }
     }
