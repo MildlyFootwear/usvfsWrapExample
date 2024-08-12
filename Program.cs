@@ -50,6 +50,7 @@ namespace usvfsWrapExample
                 running = true;
                 try
                 {
+                    // createFlags set to 0 as it is unneeded here.
                     usvfsWrapCreateProcessHooked(exe, null, 0, null);
                 }
                 catch (Exception e)

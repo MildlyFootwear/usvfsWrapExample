@@ -45,7 +45,7 @@ namespace usvfsWrapExample
         [DllImport("usvfsWrap.dll")] public static extern void usvfsWrapFree();
 
         /// <summary>
-        /// exePath should be the full path to the executable. commandArgs will be the arguments passed to it as if they were right after it in a shortcut.
+        /// exePath should be the full path to the executable. commandArgs will be the arguments passed to it as if they were right after it in a shortcut. See the documentation for CreateProcess for flag information.
         /// </summary>
         [DllImport("usvfsWrap.dll")] public static extern bool usvfsWrapCreateProcessHooked(string exePath, string commandArgs, byte createFlags, string workingDir);
 
