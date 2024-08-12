@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml.Linq;
 
@@ -72,23 +73,23 @@ namespace usvfstest
             }
             Thread exeThread = new Thread(new ThreadStart(threadMethod));
             exeThread.Start();
-
+            Thread.Sleep(1000);
             // while loop to keep the application from proceeding past this point while the hooked executable is running.
-
+            Console.Write(DateTime.Now.ToString("HH:mm:ss")+" Main process still running. Hooked processes: " + usvfsWrapGetHookedCount() + ". " + usvfsWrapGetLastHookedID());
             while (running) {
-                Console.WriteLine("Main process still running. Hooked processes: "+usvfsWrapGetHookedCount()+". "+usvfsWrapGetLastHookedID());
-                Thread.Sleep(5000);
+                Console.Write("\r"+DateTime.Now.ToString("HH:mm:ss")+" Main process still running. Hooked processes: " + usvfsWrapGetHookedCount() + ". " + usvfsWrapGetLastHookedID());
+                Thread.Sleep(1000);
             }
-            Console.WriteLine("Main process terminated.");
+            Console.WriteLine("\nMain process terminated.");
 
             // another while loop to keep the VFS available until all the child executables have closed.
 
             int hookCnt = usvfsWrapGetHookedCount();
             while (hookCnt > 0)
             {
+                Console.Write("\r" + DateTime.Now.ToString("HH:mm:ss") + " Hooked processes: " + usvfsWrapGetHookedCount() + ". " + usvfsWrapGetLastHookedID());
                 hookCnt = usvfsWrapGetHookedCount();
-                Console.WriteLine("Main process has ended. Hooked processes: ");
-                Thread.Sleep(5000);
+                Thread.Sleep(1000);
             }
 
             // finally disconnceting and freeing the VFS
