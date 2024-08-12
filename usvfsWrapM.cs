@@ -11,10 +11,9 @@ using System.Reflection.PortableExecutable;
 
 namespace usvfsWrapExample
 {
-
-
     public class usvfsWrapM
     {
+
         static public uint LINKFLAG_FAILIFEXISTS = 0x00000001; // Linking fails in case of an error.
         static public uint LINKFLAG_MONITORCHANGES = 0x00000002; // Changes to the source directory after the link operation will be updated in the virtual fs. only relevant in static link directory operations.
         static public uint LINKFLAG_CREATETARGET = 0x00000004; // File creation (including move or copy) operations to destination will be redirected to the source. Only one createtarget can be set for a destination folder.
@@ -30,6 +29,11 @@ namespace usvfsWrapExample
         {
             None, Mini, Data, Full
         };
+
+        /// <summary>
+        /// Can be used to set debug mode for usvfsWrap functions, where it will print the name of functions as they execute along with the arguments passed to them.
+        /// </summary>
+        [DllImport("usvfsWrap.dll")] public static extern void usvfsWrapSetDebug(bool b);
 
         /// <summary>
         /// Safe method to initialize a VFS. Can only initialize one at a time, which will need to be freed with usvfsWrapFree.
@@ -79,10 +83,6 @@ namespace usvfsWrapExample
         /// Adds a string that will be skipped during directory linking. Not a path. All directories matching the name will be skipped. For example, if .git is added, any sub-path or root-path containing a.git directory will have the.git directory skipped during directory linking.
         /// </summary>
         [DllImport("usvfsWrap.dll")] public static extern void usvfsWrapAddSkipDirectory(string source, string destination);
-        /// <summary>
-        /// Can be used to set debug mode for usvfsWrap functions, where it will print the name of functions as they execute along with the arguments passed to them.
-        /// </summary>
-        [DllImport("usvfsWrap.dll")] public static extern void usvfsWrapSetDebug(bool b);
 
     }
 }
