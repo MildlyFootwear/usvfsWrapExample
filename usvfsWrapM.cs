@@ -5,45 +5,83 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.IO;
+using System.Reflection.PortableExecutable;
 
-namespace usvfstest
+namespace usvfsWrapExample
 {
+
+
     public class usvfsWrapM
     {
-        // lpApplicationName should be the full path to the executable. lpCommandLine will be the arguments passed to it as if they were right after it in a shortcut.
+        static public uint LINKFLAG_FAILIFEXISTS = 0x00000001; // Linking fails in case of an error.
+        static public uint LINKFLAG_MONITORCHANGES = 0x00000002; // Changes to the source directory after the link operation will be updated in the virtual fs. only relevant in static link directory operations.
+        static public uint LINKFLAG_CREATETARGET = 0x00000004; // File creation (including move or copy) operations to destination will be redirected to the source. Only one createtarget can be set for a destination folder.
+        static public uint LINKFLAG_RECURSIVE = 0x00000008; // Directories are linked recursively
+        static public uint LINKFLAG_FAILIFSKIPPED = 0x00000010; // Linking fails if the file or directory is skipped files or directories are skipped depending on whats been added to the skip file suffixes or skip directories list.
 
-        [DllImport("usvfsWrap.dll")] public static extern bool usvfsWrapCreateProcessHooked(string lpApplicationName, string lpCommandLine);
+        public enum LogLevel : uint
+        {
+            Debug, Info, Warning, Error
+        };
 
-        // gets the process ID of the last process launched by usvfsWrapCreateProcessHooked
+        public enum CrashDumpsType : uint
+        {
+            None, Mini, Data, Full
+        };
 
+        /// <summary>
+        /// Safe method to initialize a VFS. Can only initialize one at a time, which will need to be freed with usvfsWrapFree.
+        /// </summary>
+        [DllImport("usvfsWrap.dll")] public static extern bool usvfsWrapCreateVFS(string Name, bool Debug, LogLevel log, CrashDumpsType crashtype, string dumpPath, int delay);
+        /// <summary>
+        /// Frees the last created VFS.
+        /// </summary>
+        [DllImport("usvfsWrap.dll")] public static extern void usvfsWrapFree();
+
+        /// <summary>
+        /// exePath should be the full path to the executable. commandArgs will be the arguments passed to it as if they were right after it in a shortcut.
+        /// </summary>
+        [DllImport("usvfsWrap.dll")] public static extern bool usvfsWrapCreateProcessHooked(string exePath, string commandArgs);
+
+        /// <summary>
+        /// Returns the process ID of the last process launched by usvfsWrapCreateProcessHooked.
+        /// </summary>
         [DllImport("usvfsWrap.dll")] public static extern int usvfsWrapGetLastHookedID();
 
-        // Functions exactly like usvfsVirtualLinkDirectoryStatic, except plain string arguments can be passed to it.
-
+        /// <summary>
+        /// Links two directories in the VFS; source is the original/"real" directory, destination is where the files and potentially subdirectories will show for hooked applications. See LINKFLAG variables for flag information.
+        /// </summary>
         [DllImport("usvfsWrap.dll")] public static extern void usvfsWrapVirtualLinkDirectoryStatic(string source, string destination, uint flags);
 
-        // Functions exactly like usvfsVirtualLinkFile, except plain string arguments can be passed to it.
-
+        /// <summary>
+        /// Links two files in the VFS; source is the original/"real" file, destination is where the file will show up for hooked applications. See LINKFLAG variables for flag information.
+        /// </summary>
         [DllImport("usvfsWrap.dll")] public static extern void usvfsWrapVirtualLinkFile(string source, string destination, uint flags);
 
-        // Produces a pointer to a character array containing the structure of the VFS. Pass as an argument to Marshal.PtrToStringAnsi (i.e. "string s = Marshal.PtrToStringAnsi(usvfsWrapCreateVFSDump());") to get as a string.
+        /// <summary>
+        /// Creates a dump of the VFS to the text file specified by path. If the specified file is not found, it will create a default file in the working directory.
+        /// </summary>
+        [DllImport("usvfsWrap.dll")] public static extern bool usvfsWrapCreateVFSDump(string path);
 
-        [DllImport("usvfsWrap.dll")] public static extern unsafe IntPtr usvfsWrapCreateVFSDump();
-
-        // Returns an int representing the number of processes hooked into the VFS.
-
+        /// <summary>
+        /// Returns an int representing the number of processes hooked into the VFS.
+        /// </summary>
         [DllImport("usvfsWrap.dll")] public static extern int usvfsWrapGetHookedCount();
 
-        // Functions exactly like usvfsAddSkipFileSuffix, except plain string arguments can be passed to it.
+        /// <summary>
+        /// Adds a suffix for files to skip. .txt and some_file.txt would both be considered valid.
+        /// </summary>
+        [DllImport("usvfsWrap.dll")] public static extern void usvfsWrapAddSkipFileSuffix(string suffix);
 
-        [DllImport("usvfsWrap.dll")] public static extern void usvfsWrapAddSkipFileSuffix(string source, string destination);
-
-        // Functions exactly like usvfsAddSkipDirectory, except plain string arguments can be passed to it.
-
+        /// <summary>
+        /// Adds a string that will be skipped during directory linking. Not a path. All directories matching the name will be skipped. For example, if .git is added, any sub-path or root-path containing a.git directory will have the.git directory skipped during directory linking.
+        /// </summary>
         [DllImport("usvfsWrap.dll")] public static extern void usvfsWrapAddSkipDirectory(string source, string destination);
-
-        // Can be used to set debug mode for usvfsWrap functions, where it will print the name of functions as they execute along with the arguments passed to them.
-
+        /// <summary>
+        /// Can be used to set debug mode for usvfsWrap functions, where it will print the name of functions as they execute along with the arguments passed to them.
+        /// </summary>
         [DllImport("usvfsWrap.dll")] public static extern void usvfsWrapSetDebug(bool b);
 
     }

@@ -10,20 +10,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="usvfsm.cs" />
+    <Compile Remove="usvfsp.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="System.Runtime.InteropServices;" />
-    <Using Include="usvfstest.usvfsM">
-      <Static>True</Static>
-    </Using>
-    <Using Include="usvfstest.usvfsP">
-      <Static>True</Static>
-    </Using>
-    <Using Include="usvfstest.usvfsWrapM">
+    <Using Include="usvfsWrapExample.usvfsWrapM">
       <Static>True</Static>
     </Using>
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Reference\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="usvfsWrap.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

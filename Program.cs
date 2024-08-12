@@ -1,8 +1,9 @@
+using Microsoft.VisualBasic.Logging;
 using System.Diagnostics;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml.Linq;
 
-namespace usvfstest
+namespace usvfsWrapExample
 {
     internal static class Program
     {
@@ -10,7 +11,7 @@ namespace usvfstest
         ///  The main entry point for the application.
         /// </summary>
         [STAThread]
-        unsafe static void Main()
+        static void Main()
         {
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
@@ -19,44 +20,30 @@ namespace usvfstest
             [DllImport("kernel32.dll")] static extern bool AllocConsole();
             AllocConsole();
 
-            // Set up parameters for VFS.
-
-            usvfsParameters* parameters = usvfsCreateParameters();
-            usvfsSetInstanceName(parameters, "test");
-            usvfsSetDebugMode(parameters, false);
-            usvfsSetLogLevel(parameters, LogLevel.Warning);
-            usvfsSetCrashDumpType(parameters, CrashDumpsType.None);
-            usvfsSetCrashDumpPath(parameters, "");
-            usvfsSetProcessDelay(parameters, 200); // delays launch of executable by 200ms to make sure the VFS has time to set up.
-
-            usvfsInitLogging(false);
-            usvfsCreateVFS(parameters);
-
             usvfsWrapSetDebug(true); // Enables console printout for usvfsWrap.
+            usvfsWrapCreateVFS("test", false, LogLevel.Warning, CrashDumpsType.None, "", 200);
 
             string source = "J:\\BG3Profiles";
             string destination = "C:\\Tools";
 
             // LINKFLAG_RECURSIVE for linking the source and all its subdirectories.
-            usvfsVirtualLinkDirectoryStatic(source, destination, LINKFLAG_RECURSIVE);
+            usvfsWrapVirtualLinkDirectoryStatic(source, destination, LINKFLAG_RECURSIVE);
 
             // LINKFLAG_MONITORCHANGES will update the VFS when files are created/etc.
-            usvfsVirtualLinkDirectoryStatic(destination, source, LINKFLAG_MONITORCHANGES);
+            usvfsWrapVirtualLinkDirectoryStatic(destination, source, LINKFLAG_MONITORCHANGES);
 
             // LINKFLAG_CREATETARGET will make the source directory the target for all file creation/modification operations that happen in destination.
-            usvfsVirtualLinkDirectoryStatic(source, destination, LINKFLAG_CREATETARGET);
+            usvfsWrapVirtualLinkDirectoryStatic(source, destination, LINKFLAG_CREATETARGET);
 
 
 
             // Convert the character array pointer provided by usvfsWrapCreateVFSDump to a proper string format for C#.
-            string s = Marshal.PtrToStringAnsi(usvfsWrapCreateVFSDump());
+            //string s = Marshal.PtrToStringAnsi(
 
-            Console.WriteLine(s);
-
-            // Setting up a thread to launch and hook the executable so it doesn't hang the main application.
 
             bool running = true;
 
+            // Setting up a thread to launch and hook the executable so it doesn't hang the main application.
             void threadMethod()
             {
                 running = true;
@@ -73,8 +60,8 @@ namespace usvfstest
             }
             Thread exeThread = new Thread(new ThreadStart(threadMethod));
             exeThread.Start();
-            Thread.Sleep(1000);
-            // while loop to keep the application from proceeding past this point while the hooked executable is running.
+
+            // While loop to keep the application from proceeding past this point while the hooked executable is running.
             Console.Write(DateTime.Now.ToString("HH:mm:ss")+" Main process still running. Hooked processes: " + usvfsWrapGetHookedCount() + ". " + usvfsWrapGetLastHookedID());
             while (running) {
                 Console.Write("\r"+DateTime.Now.ToString("HH:mm:ss")+" Main process still running. Hooked processes: " + usvfsWrapGetHookedCount() + ". " + usvfsWrapGetLastHookedID());
@@ -82,23 +69,21 @@ namespace usvfstest
             }
             Console.WriteLine("\nMain process terminated.");
 
-            // another while loop to keep the VFS available until all the child executables have closed.
-
+            // Another while loop to keep the VFS available until all the child executables have closed.
             int hookCnt = usvfsWrapGetHookedCount();
             while (hookCnt > 0)
             {
-                Console.Write("\r" + DateTime.Now.ToString("HH:mm:ss") + " Hooked processes: " + usvfsWrapGetHookedCount() + ". " + usvfsWrapGetLastHookedID());
+                Console.Write("\r" + DateTime.Now.ToString("HH:mm:ss") + " Hooked processes: " + usvfsWrapGetHookedCount() + ".");
                 hookCnt = usvfsWrapGetHookedCount();
                 Thread.Sleep(1000);
             }
 
-            // finally disconnceting and freeing the VFS
+            usvfsWrapCreateVFSDump("dump.txt");
 
+            // finally disconnceting and freeing the VFS
             Console.WriteLine("Disconnecting VFS");
-            usvfsDisconnectVFS();
-            usvfsFreeParameters(parameters);
+            usvfsWrapFree();
             Thread.Sleep(5000);
-            //Application.Run(new Form1());
         }
     }
 }
