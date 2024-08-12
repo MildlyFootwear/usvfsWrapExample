@@ -23,8 +23,8 @@ namespace usvfsWrapExample
             usvfsWrapSetDebug(true); // Enables console printout for usvfsWrap.
             usvfsWrapCreateVFS("test", false, LogLevel.Warning, CrashDumpsType.None, "", 200);
 
-            string source = "J:\\BG3Profiles";
-            string destination = "C:\\Tools";
+            string source = "C:\\Tools";
+            string destination = "J:\\BG3Profiles";
 
             // LINKFLAG_RECURSIVE for linking the source and all its subdirectories.
             usvfsWrapVirtualLinkDirectoryStatic(source, destination, LINKFLAG_RECURSIVE);
@@ -44,13 +44,13 @@ namespace usvfsWrapExample
             bool running = true;
 
             // Setting up a thread to launch and hook the executable so it doesn't hang the main application.
+            string exe = "C:\\Program Files\\paint.net\\paintdotnet.exe";
             void threadMethod()
             {
                 running = true;
                 try
                 {
-
-                    usvfsWrapCreateProcessHooked("C:\\Program Files\\paint.net\\paintdotnet.exe", "");
+                    usvfsWrapCreateProcessHooked(exe, null, 0, null);
                 }
                 catch (Exception e)
                 {
@@ -60,9 +60,8 @@ namespace usvfsWrapExample
             }
             Thread exeThread = new Thread(new ThreadStart(threadMethod));
             exeThread.Start();
-
+            Thread.Sleep(50);
             // While loop to keep the application from proceeding past this point while the hooked executable is running.
-            Console.Write(DateTime.Now.ToString("HH:mm:ss")+" Main process still running. Hooked processes: " + usvfsWrapGetHookedCount() + ". " + usvfsWrapGetLastHookedID());
             while (running) {
                 Console.Write("\r"+DateTime.Now.ToString("HH:mm:ss")+" Main process still running. Hooked processes: " + usvfsWrapGetHookedCount() + ". " + usvfsWrapGetLastHookedID());
                 Thread.Sleep(1000);
