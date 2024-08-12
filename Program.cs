@@ -37,13 +37,15 @@ namespace usvfstest
             string destination = "C:\\Tools";
 
             // LINKFLAG_RECURSIVE for linking the source and all its subdirectories.
-            usvfsWrapVirtualLinkDirectoryStatic(source, destination, LINKFLAG_RECURSIVE);
-
-            // LINKFLAG_CREATETARGET will make the source directory the target for all file creation/modification operations that happen in destination.
-            usvfsWrapVirtualLinkDirectoryStatic(source, destination, LINKFLAG_CREATETARGET);
+            usvfsVirtualLinkDirectoryStatic(source, destination, LINKFLAG_RECURSIVE);
 
             // LINKFLAG_MONITORCHANGES will update the VFS when files are created/etc.
-            usvfsWrapVirtualLinkDirectoryStatic(destination, source, LINKFLAG_MONITORCHANGES);
+            usvfsVirtualLinkDirectoryStatic(destination, source, LINKFLAG_MONITORCHANGES);
+
+            // LINKFLAG_CREATETARGET will make the source directory the target for all file creation/modification operations that happen in destination.
+            usvfsVirtualLinkDirectoryStatic(source, destination, LINKFLAG_CREATETARGET);
+
+
 
             // Convert the character array pointer provided by usvfsWrapCreateVFSDump to a proper string format for C#.
             string s = Marshal.PtrToStringAnsi(usvfsWrapCreateVFSDump());
@@ -57,7 +59,15 @@ namespace usvfstest
             void threadMethod()
             {
                 running = true;
-                usvfsWrapCreateProcessHooked("C:\\Tools\\Notepad++\\notepad++.exe", "");
+                try
+                {
+
+                    usvfsWrapCreateProcessHooked("C:\\Program Files\\paint.net\\paintdotnet.exe", "");
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                }
                 running = false;
             }
             Thread exeThread = new Thread(new ThreadStart(threadMethod));
