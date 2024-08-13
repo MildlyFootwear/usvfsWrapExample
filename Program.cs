@@ -35,15 +35,9 @@ namespace usvfsWrapExample
             // LINKFLAG_CREATETARGET will make the source directory the target for all file creation/modification operations that happen in destination.
             usvfsWrapVirtualLinkDirectoryStatic(source, destination, LINKFLAG_CREATETARGET);
 
-
-
-            // Convert the character array pointer provided by usvfsWrapCreateVFSDump to a proper string format for C#.
-            //string s = Marshal.PtrToStringAnsi(
-
+            // Setting up a thread to launch and hook the executable so it doesn't hang the main application.
 
             bool running = true;
-
-            // Setting up a thread to launch and hook the executable so it doesn't hang the main application.
             string exe = "C:\\Program Files\\paint.net\\paintdotnet.exe";
             void threadMethod()
             {
@@ -62,6 +56,7 @@ namespace usvfsWrapExample
             Thread exeThread = new Thread(new ThreadStart(threadMethod));
             exeThread.Start();
             Thread.Sleep(50);
+
             // While loop to keep the application from proceeding past this point while the hooked executable is running.
             while (running) {
                 Console.Write("\r"+DateTime.Now.ToString("HH:mm:ss")+" Main process still running. Hooked processes: " + usvfsWrapGetHookedCount() + ". " + usvfsWrapGetLastHookedID());
